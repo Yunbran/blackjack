@@ -23,29 +23,32 @@
       var tempPop;
       tempPop = this.deck.pop();
       this.add(tempPop).last();
-      if (this.checkOver()) {
+      if (this.checkOver(21)) {
         return this.trigger('bust');
       }
     };
 
-    Hand.prototype.checkOver = function() {
+    Hand.prototype.checkScore = function() {
       var curScore;
       curScore = this.scores();
-      if ((curScore[1] != null) && curScore <= 21) {
-        curScore = curScore[1];
+      if ((curScore[1] != null) && curScore[1] <= 21) {
+        return curScore = curScore[1];
       } else {
-        curScore = curScore[0];
+        return curScore = curScore[0];
       }
-      console.log(curScore);
-      if (curScore > 21) {
-        $('.hit-button').attr('disabled', 'disabled');
-      }
-      if (curScore > 21) {
+    };
+
+    Hand.prototype.checkOver = function(num) {
+      var curScore;
+      curScore = this.checkScore();
+      if (curScore > num) {
         return true;
       } else {
         return false;
       }
     };
+
+    Hand.prototype.AIcheckOver = function() {};
 
     Hand.prototype.stand = function() {
       $('.hit-button').attr('disabled', 'disabled');
@@ -53,7 +56,7 @@
       return this.trigger('stand');
     };
 
-    Hand.prototype.scores = function() {
+    Hand.prototype.scores = function(dealerBoolean) {
       var hasAce, score;
       hasAce = this.reduce(function(memo, card) {
         return memo || card.get('value') === 1;
@@ -69,7 +72,23 @@
     };
 
     Hand.prototype.aiPlay = function() {
-      return console.log('AI trigger');
+      var aiActions, play, that, _results;
+      that = this;
+      play = true;
+      aiActions = function() {
+        if (that.checkScore() >= 17) {
+          play = false;
+          return that.stand();
+        } else {
+          return that.hit();
+        }
+      };
+      this.models[0].set('revealed', true);
+      _results = [];
+      while (play) {
+        _results.push(aiActions());
+      }
+      return _results;
     };
 
     return Hand;

@@ -18,11 +18,13 @@
       this.get('playerHand').on('bust', (function() {
         return console.log('busted');
       }), this);
-      this.get('playerHand').on('aiPlay', (function() {
-        return (this.get('dealerHand')).aiPlay();
+      this.get('dealerHand').on('aiPlay', (function() {
+        var cxt;
+        cxt = this.get('dealerHand');
+        return cxt.aiPlay();
       }), this);
       this.get('playerHand').on('stand', (function() {
-        return (this.get('playerHand')).trigger('aiPlay');
+        return (this.get('dealerHand')).trigger('aiPlay');
       }), this);
       return this;
     };

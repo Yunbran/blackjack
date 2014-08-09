@@ -10,10 +10,13 @@ class window.App extends Backbone.Model
     @get 'playerHand'
     .on('bust', (-> console.log 'busted' ), @)
 
-    @get 'playerHand'
-    .on('aiPlay', (-> (@get 'dealerHand').aiPlay() ), @)
+    # @get 'dealerHand'
+    # .on('aiPlay', (-> (@get 'dealerHand').aiPlay() ), @)
+
+    @get 'dealerHand'
+    .on('aiPlay', (-> cxt = @get 'dealerHand'; cxt.aiPlay() ), @)
 
     @get 'playerHand'
-    .on('stand', (-> (@get 'playerHand').trigger 'aiPlay' ), @)
+    .on('stand', (-> (@get 'dealerHand').trigger 'aiPlay' ), @)
 
     @
